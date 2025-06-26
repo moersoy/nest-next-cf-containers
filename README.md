@@ -11,6 +11,12 @@ Experience the application live in your browser! This demo runs entirely on Clou
 ![Random Number Generator UI](docs/screenshot.png)
 *A screenshot of the application's user interface.*
 
+## 📝 Blog Post
+
+For a deep dive into the project's architecture, challenges, and the development journey with Cloudflare Containers, check out the detailed blog post:
+
+➡️ **[Pushing the Limits with Cloudflare Containers: A Gateway Architecture for NestJS and Next.js](https://www.linkedin.com/pulse/pushing-limits-cloudflare-containers-gateway-nestjs-nextjs-ersoy-hz5oe)**
+
 ## ✨ Features
 
 -   **API (`/api`)**: A [NestJS](https://nestjs.com/) backend that provides a simple endpoint to get a random number within a specified range.
