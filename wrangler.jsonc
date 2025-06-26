@@ -1,0 +1,46 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nest-next-random",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-06-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true
+  },
+  "build": {
+    "command": ""
+  },
+  "vars": {
+    "WORKER_ENV": "production",
+    "DEBUG_MODE": "false"
+  },
+  "containers": [
+    {
+      "class_name": "APIContainer",
+      "image": "./Dockerfile.api",
+      "max_instances": 10,
+      "instance_type": "basic",
+    },
+    {
+      "class_name": "WebContainer",
+      "image": "./Dockerfile.web",
+      "max_instances": 10,
+      "instance_type": "basic",
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      { "class_name": "APIContainer", "name": "API_CONTAINER" },
+      { "class_name": "WebContainer", "name": "WEB_CONTAINER" }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["APIContainer", "WebContainer"]
+    }
+  ],
+  "services": [
+    { "binding": "CUSTOM_CF_WORKER", "service": "fetch-json" } // https://developers.cloudflare.com/workers/runtime-apis/fetch/
+  ]
+}

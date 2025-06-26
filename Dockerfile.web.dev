@@ -1,0 +1,38 @@
+# Cloudflare Containers Development - Next.js Web (Monorepo-aware)
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dumb-init for proper signal handling
+RUN apk add --no-cache dumb-init curl
+
+# Install pnpm globally
+RUN npm install -g pnpm@latest
+
+# Now, copy the rest of the source code
+COPY ./web .
+
+# Install ALL dependencies (including dev deps for watch mode)
+RUN pnpm install --no-frozen-lockfile
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nextjs -u 1001 && \
+    chown -R nextjs:nodejs /app
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port 3001, which Next.js will use via the PORT env var
+EXPOSE 3001
+
+# Environment variables for development
+ENV NODE_ENV=development
+ENV PORT=3001
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Use dumb-init and start the specific 'next-web' package in dev mode from the root.
+# --filter tells pnpm which workspace package to run the command for.
+# The WORKDIR remains /app, which is the monorepo root.
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["pnpm", "run", "dev"] 

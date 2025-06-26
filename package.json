@@ -1,0 +1,57 @@
+{
+  "name": "nest-next-cf-containers",
+  "version": "2.0.0",
+  "description": "NestJS + Next.js Random Number Generator with Cloudflare Containers Beta",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moersoy/nest-next-cf-containers.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moersoy/nest-next-cf-containers/issues"
+  },
+  "homepage": "https://github.com/moersoy/nest-next-cf-containers#readme",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "build": "npm run build:containers",
+    "build:api": "pnpm --filter nest-api build",
+    "build:web": "pnpm --filter next-web build",
+    "build:containers": "pnpm build:api && pnpm build:web",
+    "build:worker": "tsc src/index.ts --outDir dist --target ES2020 --module ESNext",
+    "docker:build": "docker build -f Dockerfile.api -t nest-api . && docker build -f Dockerfile.web -t next-web .",
+    "docker:run:api": "docker run -p 8080:3000 nest-api",
+    "docker:run:web": "docker run -p 3000:3000 next-web",
+    "logs": "wrangler tail",
+    "type-check": "tsc --noEmit && pnpm --filter nest-api build && pnpm --filter next-web tsc --noEmit",
+    "lint": "pnpm --filter next-web lint",
+    "clean": "rm -rf api/dist api/node_modules web/.next web/node_modules node_modules dist",
+    "validate": "npm run type-check && npm run lint",
+    "cf-typegen": "wrangler types"
+  },
+  "keywords": [
+    "cloudflare",
+    "containers",
+    "nestjs",
+    "nextjs",
+    "docker",
+    "workers",
+    "beta"
+  ],
+  "author": "moersoy",
+  "license": "MIT",
+  "dependencies": {
+    "@cloudflare/containers": "^0.0.13",
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.4",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.21.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
+}
